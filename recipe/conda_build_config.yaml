@@ -1,0 +1,7 @@
+# x86_64 microarchitecture levels to build (see "Microarchitecture-optimized builds" in the
+# conda-forge knowledge base). The solver installs the highest level the machine supports.
+#   1: baseline x86-64, and the only level on other platforms
+#   3: x86-64-v3 (SSE4.1-4.2, AVX2, FMA), linux-64 only
+microarch_level:
+  - 1
+  - 3  # [linux and x86_64]

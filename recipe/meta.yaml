@@ -1,5 +1,6 @@
 {% set name = "finufft" %}
 {% set version = "2.5.1" %}
+{% set build = 2 %}
 
 package:
   name: finufft-split
@@ -10,7 +11,7 @@ source:
   sha256: 809aa60ea4bf11a9976642d30d6bd2634da0083bdebd580d64705bc4aecfcd0e
 
 build:
-  number: 1
+  number: {{ build }}
 
 outputs:
   # - name: libfinufft
@@ -50,6 +51,8 @@ outputs:
     script: build_finufft.sh  # [not win]
     script: build_finufft.bat  # [win]
     build:
+      # Prefer the highest microarch level the machine supports
+      number: {{ build + 100 * (microarch_level | default(1) | int - 1) }}
       skip: true  # [cuda_compiler_version != "None"]
       script_env:
         - FINUFFT_USE_OPENMP=OFF  # [win]
@@ -61,6 +64,7 @@ outputs:
         - fftw                                  # [build_platform != target_platform]
         - llvm-openmp                           # [osx and build_platform != target_platform]
         - libgomp                               # [linux and build_platform != target_platform]
+        - x86_64-microarch-level =={{ microarch_level }}  # [linux and x86_64]
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
         - cmake
